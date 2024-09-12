@@ -16,6 +16,9 @@
 
 #pragma once
 
+// potential rgb matrix stuff: https://github.com/jay-dimock/qmk_firmware/blob/74bbbf99175970b1341aad0feb5023b0a7d17b48/keyboards/splitkb/kyria/keymaps/dimock/stable/latest/config.h
+
+// note: vscode lies about the lined inside ifdef being commented out, it is not
 #ifdef RGBLIGHT_ENABLE
 #    define RGBLIGHT_EFFECT_BREATHING
 #    define RGBLIGHT_EFFECT_RAINBOW_MOOD

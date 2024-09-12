@@ -254,5 +254,12 @@ Check out the #keymap-ideas channel on the official SplitKB Discord server for i
  - qmk compile -kb splitkb/kyria/rev3 -km jsve
  - qmk painter-convert-graphics -f mono2 -i pedro.gif
  
+## Links
+ - https://docs.qmk.fm/other_vscode
+ 
 ## REF
  - https://github.com/tzarc/qmk_userspace/blob/7f07f0cddcf3638928643954d5e121a7ec2b035c/development/alternates/qp_test/qp_test.c
+ - https://github.com/GloriousThrall/qmk_firmware/blob/7160487ccdd1ea6d07816290a95c42e49cc350ef/keyboards/tzarc/djinn/graphics/theme_djinn_default.c#L80
+ 
+### Font and images
+ - keyboards/tzarc/djinn/graphics/theme_djinn_default.c
