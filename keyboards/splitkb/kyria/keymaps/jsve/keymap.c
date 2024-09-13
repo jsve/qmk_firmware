@@ -204,41 +204,36 @@ void keyboard_post_init_user(void) {
     gslogo  = qp_load_image_mem(gfx_gslogo);
     thintel = qp_load_font_mem(font_thintel15);
     display = qp_sh1106_make_i2c_device(128, 64, 0x3C);
+    
     qp_init(display, QP_ROTATION_180);
+
+    qp_clear(display);
+    qp_flush(display);
 }
 
-// bool set_rgb(int index, uint8_t hue, uint8_t sat, uint8_t val){
-//     // Using HSV and then converting to RGB allows the brightness 
-//     // to be limited (important when using the WS2812 driver).
-//     HSV hsv = {hue, sat, val};
-//     if (hsv.v > 0) {
-//         hsv.v = 128;
-//     }
-//     RGB rgb = hsv_to_rgb(hsv);
-//     rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
-//     return false;
-// }
+bool set_rgb(int index, uint8_t hue, uint8_t sat, uint8_t val){
+    // Using HSV and then converting to RGB allows the brightness 
+    // to be limited (important when using the WS2812 driver).
+    HSV hsv = {hue, sat, val};
+    // if (hsv.v > 0) {
+    //     hsv.v = 128;
+    // }
+    RGB rgb = hsv_to_rgb(hsv);
+    rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
+    return false;
+}
 
-// bool set_rgb_all(uint8_t hue, uint8_t sat, uint8_t val){
-//     // Using HSV and then converting to RGB allows the brightness 
-//     // to be limited (important when using the WS2812 driver).
-//     HSV hsv = {hue, sat, val};
-//     if (hsv.v > 0) {
-//         hsv.v = 128;
-//     }
-//     RGB rgb = hsv_to_rgb(hsv);
-//     rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
-//     return false;
-// }
-
-// bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-//     if (host_keyboard_led_state().caps_lock) {
-//         RGB_MATRIX_INDICATOR_SET_COLOR(5, 255, 255, 255); // assuming caps lock is at led #5
-//     } else {
-//         RGB_MATRIX_INDICATOR_SET_COLOR(5, 0, 0, 0);
-//     }
-//     return false;
-// }
+bool set_rgb_all(uint8_t hue, uint8_t sat, uint8_t val){
+    // Using HSV and then converting to RGB allows the brightness 
+    // to be limited (important when using the WS2812 driver).
+    HSV hsv = {hue, sat, val};
+    // if (hsv.v > 0) {
+    //     hsv.v = 128;
+    // }
+    RGB rgb = hsv_to_rgb(hsv);
+    rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+    return false;
+}
 
 static deferred_token current_anim = INVALID_DEFERRED_TOKEN;
 
@@ -249,7 +244,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         qp_stop_animation(current_anim);
     }
 
-    switch(get_highest_layer(state)) {
+    switch(get_highest_layer(state)) { // could perhaps be state|default_layer_state
         case _QWERTY:
             if (thintel != NULL) {
                 static const char *text = "DEF";
@@ -270,8 +265,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
                 qp_flush(display);
                 current_anim = qp_animate(display,32, 0, pedro);
                 qp_flush(display);
+
             }
             break;
+        case _ADJUST: {
+            char val_str[4];
+            snprintf(val_str, sizeof(val_str), "%u", rgb_matrix_get_val());
+            print_bottom_inner(val_str);
+            break;
+        }
         default: {
             char layer_str[10];
             snprintf(layer_str, sizeof(layer_str), "%u", state);
@@ -280,35 +282,44 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         }
     }
 
-    rgblight_sethsv_at(50, 50, 50, 10);
-    rgblight_sethsv_at(50, 50, 50, 11);
-    rgblight_sethsv_at(50, 50, 50, 12);
-    rgblight_sethsv_at(50, 50, 50, 13);
-    rgblight_sethsv_at(50, 50, 50, 14);
-    rgblight_sethsv_at(50, 50, 50, 15);
-    rgblight_sethsv_at(50, 50, 50, 16);
-    rgblight_sethsv_at(50, 50, 50, 17);
-    rgblight_sethsv_at(50, 50, 50, 18);
-    rgblight_sethsv_at(50, 50, 50, 19);
-    rgblight_sethsv_at(50, 50, 50, 20);
-    rgblight_sethsv_at(50, 50, 50, 21);
-    rgblight_sethsv_at(50, 50, 50, 22);
-    rgblight_sethsv_at(50, 50, 50, 23);
-    rgblight_sethsv_at(50, 50, 50, 24);
-    rgblight_sethsv_at(50, 50, 50, 25);
-    rgblight_sethsv_at(50, 50, 50, 26);
-    rgblight_sethsv_at(50, 50, 50, 27);
-    rgblight_sethsv_at(50, 50, 50, 28);
-    rgblight_sethsv_at(50, 50, 50, 29);
-    rgblight_sethsv_at(50, 50, 50, 30);
-    rgblight_sethsv_at(50, 50, 50, 31);
-    rgblight_sethsv_at(50, 50, 50, 32);
-    rgblight_sethsv_at(50, 50, 50, 33);
-    rgblight_sethsv_at(50, 50, 50, 34);
-    rgblight_sethsv_at(50, 50, 50, 50);
 
     return state;
 }
+
+// right, middle
+int h = 50;
+int j = 51;
+int k = 52;
+int l = 53;
+int oe = 54;
+int ae = 55;
+
+// Right, top
+int y = 56;
+int u = 57;
+int i = 58;
+int o = 50;
+int p = 60;
+int ao = 61;
+
+// COLORS
+// #define GS_PINK 245, 204, 222 // actual
+#define GS_PINK 250, 255, 255 // adapted to look better
+
+bool rgb_matrix_indicators_user(void) {
+    switch(get_highest_layer(layer_state)) {
+        case _NAV:
+            set_rgb(i, GS_PINK);
+            set_rgb(j, GS_PINK);
+            set_rgb(k, GS_PINK);
+            set_rgb(l, GS_PINK);
+            break;
+        default:
+            break;
+    }
+    return true;
+}
+
 
 
 void housekeeping_task_user(void) {
